@@ -18,6 +18,10 @@ variable "instance_type" {
 variable "key_name" {
   default = "terraform"
 }
+variable "private_ip" {
+  type = "string"
+  default = ""
+}
 variable "provisioning_ssh_key" {}
 variable "provisioning_user" {
   default = "ubuntu"
