@@ -25,7 +25,8 @@ variable "provisioning_user" {
 variable "puppetmaster_ip" {}
 variable "subnet_id" {}
 variable "tags" {
-  type = "map"
+  type    = "map"
+  default = {}
 }
 variable "vpc_security_group_ids" {
     type = "list"
