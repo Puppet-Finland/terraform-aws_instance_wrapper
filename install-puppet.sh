@@ -75,6 +75,23 @@ setup_puppet() {
             export DEBIAN_FRONTEND=noninteractive
             FILE="$(mktemp -d)/puppet-release.db"
             wget "${APT_URL}" -qO $FILE || (c=$?; echo "Failed to retrieve ${APT_URL}"; (exit $c))
+            # The apt-daily and apt-daily-upgrade services have a nasty habit of
+            # launching immediately on boot. This prevents the installer from updating
+            # the package caches itself, which causes some packages to be missing and
+            # subsequently causing puppetmaster-installer to fail. So, wait for those
+            # two services to run before attempting to run the installer. There are
+            # ways to use systemd-run to accomplish this rather nicely:
+            #
+            # https://unix.stackexchange.com/questions/315502/how-to-disable-apt-daily-service-on-ubuntu-cloud-vm-image
+            #
+            # However, that approach fails on Ubuntu 16.04 (and earlier) as well as
+            # Debian 9, so it is not practical. This approach uses a simple polling
+            # method and built-in tools.
+            while true; do
+                fuser -s /var/lib/dpkg/lock || break
+                sleep 1
+            done
+
             dpkg --install $FILE; rm $FILE; apt-get update || (c=$?; echo "Failed to install from ${FILE}"; (exit $c))
             apt-get -y install puppet-agent || (c=$?; echo "Failed to install puppet agent"; (exit $c))
         fi
