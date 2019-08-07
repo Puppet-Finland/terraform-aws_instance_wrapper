@@ -87,8 +87,17 @@ setup_puppet() {
             # However, that approach fails on Ubuntu 16.04 (and earlier) as well as
             # Debian 9, so it is not practical. This approach uses a simple polling
             # method and built-in tools.
-            while true; do
-                fuser -s /var/lib/dpkg/lock || break
+            APT_READY=no
+            while [ "$APT_READY" = "no" ]; do
+                # This checks three things to prevent package installation failures, in this order:
+                #
+                # 1) Is "apt-get update" running?
+                # 2) Is "apt-get install" running?
+                # 3) Is "dpkg" running?
+                #
+                # The "apt-get install" commands locks dpkg as well, but the last check ensures that dpkg running outside of apt does not cause havoc.
+                #
+                fuser -s /var/lib/apt/lists/lock || fuser -s /var/cache/apt/archives/lock || fuser -s /var/lib/dpkg/lock || APT_READY=yes
                 sleep 1
             done
 
