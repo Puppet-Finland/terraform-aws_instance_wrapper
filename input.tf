@@ -3,6 +3,11 @@ variable "ami" {}
 variable "count" {
   default = 1
 }
+variable "associate_public_ip_address" {
+  type = "string"
+  default = "true"
+}
+
 variable "default_root_block_device" {
   type = "list"
 }
