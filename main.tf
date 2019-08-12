@@ -11,6 +11,10 @@ resource "aws_instance" "ec2_instance" {
   tags = "${local.tags}"
   vpc_security_group_ids = [ "${var.vpc_security_group_ids}" ]
 
+  lifecycle {
+    ignore_changes = [ "associate_public_ip_address" ]
+  }
+
   connection {
     type = "ssh"
     user = "${var.provisioning_user}"
