@@ -31,6 +31,10 @@ variable "provisioning_ssh_key" {}
 variable "provisioning_user" {
   default = "ubuntu"
 }
+# By default use "deployment" as the Puppet environment name
+variable "puppet_environment" {
+  default = "false"
+}
 variable "puppetmaster_ip" {}
 variable "subnet_id" {}
 variable "tags" {

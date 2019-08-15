@@ -44,6 +44,6 @@ resource "aws_instance" "ec2_instance" {
     inline = [ "sudo mv /tmp/deployment.yaml /etc/puppetlabs/facter/facts.d/",
                "sudo chown -R root:root /etc/puppetlabs/facter",
                "chmod +x /tmp/install-puppet.sh",
-               "sudo /tmp/install-puppet.sh ${var.hostname} ${var.deployment}" ]
+               "sudo /tmp/install-puppet.sh ${var.hostname} ${local.puppet_env}" ]
   }
 }
