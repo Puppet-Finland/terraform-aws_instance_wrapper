@@ -36,6 +36,7 @@ variable "puppet_environment" {
   default = "false"
 }
 variable "puppetmaster_ip" {}
+variable "region" {}
 variable "subnet_id" {}
 variable "tags" {
   type    = "map"
