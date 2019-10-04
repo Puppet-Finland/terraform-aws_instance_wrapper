@@ -29,9 +29,14 @@ detect_osfamily() {
         OSFAMILY='redhat'
         RELEASE=$(cat /etc/redhat-release)
 	if [ "`echo $RELEASE | grep -E 7\.[0-9]+`" ]; then
-            RHEL_VERSION="7"
+            REDHAT_VERSION="7"
+            REDHAT_RELEASE="el-7"
+        elif [ "`echo $RELEASE | grep "(Thirty)"`" ]; then
+            REDHAT_VERSION="30"
+            # Puppetlabs does not have Fedora 30 packages yet
+            REDHAT_RELEASE="fedora-29"
         else
-            echo "Unsupported Redhat/Centos version. Supported versions are 7.x"
+            echo "Unsupported Redhat/Centos/Fedora version. RedHat/CentOS 7 and Fedora 30 are supported."
             exit 1
         fi
     elif [ "`lsb_release -d | grep -E '(Ubuntu|Debian)'`" ]; then
@@ -51,12 +56,18 @@ detect_osfamily() {
     fi
 }
 
+install_dependencies() {
+    if [ "${REDHAT_VERSION}" = "30" ]; then
+        dnf -y install libxcrypt-compat
+    fi
+}
+
 setup_puppet() {
     if [ -x /opt/puppetlabs/bin/puppet ]; then
         true
     else
-        if [ $RHEL_VERSION ]; then
-            RELEASE_URL="https://yum.puppetlabs.com/puppet5/puppet5-release-el-${RHEL_VERSION}.noarch.rpm"
+        if [ $REDHAT_RELEASE ]; then
+            RELEASE_URL="https://yum.puppetlabs.com/puppet5/puppet5-release-${REDHAT_RELEASE}.noarch.rpm"
             rpm -hiv "${RELEASE_URL}" || (c=$?; echo "Failed to install ${RELEASE_URL}"; (exit $c))
             yum -y install puppet-agent || (c=$?; echo "Failed to install puppet agent"; (exit $c))
             if systemctl list-unit-files --type=service | grep firewalld; then
@@ -119,6 +130,7 @@ run_puppet_agent() {
 validate_params $1 $2
 set_hostname $1
 detect_osfamily
+install_dependencies
 setup_puppet
 set_puppet_agent_environment $2
 run_puppet_agent
