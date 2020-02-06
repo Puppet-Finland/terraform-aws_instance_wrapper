@@ -13,6 +13,7 @@ resource "aws_instance" "ec2_instance" {
   associate_public_ip_address = "${var.associate_public_ip_address}"
   count = "${var.count}"
   disable_api_termination = "${var.disable_api_termination}"
+  ebs_optimized = "${var.ebs_optimized}"
   instance_type = "${var.instance_type}"
   key_name = "${var.key_name}"
   private_ip = "${var.private_ip}"

@@ -12,6 +12,10 @@ variable "default_root_block_device" {
   type = "list"
 }
 variable "deployment" {}
+variable "ebs_optimized" {
+  type = "string"
+  default = "true"
+}
 variable "disable_api_termination" {
   type = "string"
   default = "true"
