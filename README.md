@@ -13,10 +13,11 @@ require some explanation:
 * **provisioning_ssh_key**: the local path to the SSH key used with Terraform provisioning; you probably want to set this as an environment variable in a virtualenv.
 * **custom_provisioning_scripts**: a list of scripts on the local filesystem to copy and execute on the remote hosts. Note that the scripts must call sudo by themselves if they need to elevate their privileges. This is the normal behavior in Terraform.
 * **tags**: extra tags to add to the instance; note that this module sets "Name" = "<hostname>" tag automatically.
+
 Example usage:
 
     module "myserver" {
-      source                    = ""
+      source                    = "https://github.com/Puppet-Finland/terraform-aws_instance_wrapper.git"
       ami                       = "ami-074e2d6769f445be5"
       hostname                  = "myserver.example.org"
       default_root_block_device = [{ volume_size = 30, delete_on_termination = false }]
