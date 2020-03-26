@@ -40,6 +40,11 @@ variable "provisioning_ssh_key" {}
 variable "provisioning_user" {
   default = "ubuntu"
 }
+variable "provision_using_private_ip" {
+  type = "string"
+  default = "false"
+}
+
 # By default use "deployment" as the Puppet environment name
 variable "puppet_environment" {
   default = "false"
