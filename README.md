@@ -10,7 +10,7 @@ require some explanation:
 * **hostname**: the fully-qualified hostname to use; ends up as certname in Puppet.
 * **deployment**: this sets an external fact called "deployment" which can be used in Puppet manifests or Hiera to distinguish between production, staging and testing environments, for example.
 * **provisioning_ssh_key**: the local path to the SSH key used with Terraform provisioning; you probably want to set this as an environment variable in a virtualenv.
-* **custom_provisioning_scripts**: a list of scripts on the local filesystem to copy and execute on the remote hosts
+* **custom_provisioning_scripts**: a list of scripts on the local filesystem to copy and execute on the remote hosts. Note that the scripts must call sudo by themselves if they need to elevate their privileges. This is the normal behavior in Terraform.
 * **tags**: extra tags to add to the instance; note that this module sets "Name" = "<hostname>" tag automatically.
 Example usage:
 
