@@ -57,4 +57,8 @@ resource "aws_instance" "ec2_instance" {
                "chmod +x /tmp/install-puppet.sh",
                "sudo /tmp/install-puppet.sh ${var.hostname} ${local.puppet_env}" ]
   }
+
+  provisioner "remote-exec" {
+    scripts = "${var.custom_provisioning_scripts}"
+  }
 }

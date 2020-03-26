@@ -8,6 +8,11 @@ variable "associate_public_ip_address" {
   default = "true"
 }
 
+variable "custom_provisioning_scripts" {
+  type = "list"
+  default = []
+}
+
 variable "default_root_block_device" {
   type = "list"
 }
