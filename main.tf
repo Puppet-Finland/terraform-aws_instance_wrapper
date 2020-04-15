@@ -23,7 +23,7 @@ resource "aws_instance" "ec2_instance" {
   vpc_security_group_ids = [ "${var.vpc_security_group_ids}" ]
 
   lifecycle {
-    ignore_changes = [ "associate_public_ip_address" ]
+    ignore_changes = [ "associate_public_ip_address", "ebs_optimized" ]
   }
 
   connection {
