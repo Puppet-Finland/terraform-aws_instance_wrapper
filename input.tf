@@ -56,6 +56,12 @@ variable "tags" {
   type    = "map"
   default = {}
 }
+
+variable "volume_tags" {
+  type    = "map"
+  default = {}
+}
+
 variable "vpc_security_group_ids" {
     type = "list"
 }

@@ -20,6 +20,7 @@ resource "aws_instance" "ec2_instance" {
   root_block_device = "${var.default_root_block_device}"
   subnet_id = "${var.subnet_id}"
   tags = "${local.tags}"
+  volume_tags = "${var.volume_tags}"
   vpc_security_group_ids = [ "${var.vpc_security_group_ids}" ]
 
   lifecycle {
