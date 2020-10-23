@@ -1,6 +1,6 @@
 variable "ami" {}
-# Setting "count" to 0 is equivalent to "ensure => absent" in Puppet
-variable "count" {
+# Setting "amount" to 0 is equivalent to "ensure => absent" in Puppet
+variable "amount" {
   default = 1
 }
 variable "associate_public_ip_address" {

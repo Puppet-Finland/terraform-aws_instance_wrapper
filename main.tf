@@ -3,15 +3,13 @@
 # <https://github.com/hashicorp/terraform/issues/13018>
 #
 provider "aws" {
-  region = "${var.region}"
-  alias = "${var.region}"
 }
 
 resource "aws_instance" "ec2_instance" {
   provider = "aws.${var.region}"
   ami = "${var.ami}"
   associate_public_ip_address = "${var.associate_public_ip_address}"
-  count = "${var.count}"
+  count = "${var.amount}"
   disable_api_termination = "${var.disable_api_termination}"
   ebs_optimized = "${var.ebs_optimized}"
   instance_type = "${var.instance_type}"
