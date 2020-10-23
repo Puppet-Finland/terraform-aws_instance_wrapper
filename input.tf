@@ -1,47 +1,63 @@
-variable "ami" {}
+variable "ami" {
+}
+
 # Setting "amount" to 0 is equivalent to "ensure => absent" in Puppet
 variable "amount" {
   default = 1
 }
+
 variable "associate_public_ip_address" {
-  type = "string"
+  type    = string
   default = "true"
 }
 
 variable "custom_provisioning_scripts" {
-  type = "list"
+  type    = list(string)
   default = []
 }
 
 variable "default_root_block_device" {
-  type = "list"
+  type = list(string)
 }
-variable "deployment" {}
+
+variable "deployment" {
+}
+
 variable "ebs_optimized" {
-  type = "string"
+  type    = string
   default = "true"
 }
+
 variable "disable_api_termination" {
-  type = "string"
+  type    = string
   default = "true"
 }
-variable "hostname" {}
+
+variable "hostname" {
+}
+
 variable "instance_type" {
   default = "t2.micro"
 }
+
 variable "key_name" {
   default = "terraform"
 }
+
 variable "private_ip" {
-  type = "string"
+  type    = string
   default = ""
 }
-variable "provisioning_ssh_key" {}
+
+variable "provisioning_ssh_key" {
+}
+
 variable "provisioning_user" {
   default = "ubuntu"
 }
+
 variable "provision_using_private_ip" {
-  type = "string"
+  type    = string
   default = "false"
 }
 
@@ -49,19 +65,28 @@ variable "provision_using_private_ip" {
 variable "puppet_environment" {
   default = "false"
 }
-variable "puppetmaster_ip" {}
-variable "region" {}
-variable "subnet_id" {}
+
+variable "puppetmaster_ip" {
+}
+
+variable "region" {
+  #  type = string
+}
+
+variable "subnet_id" {
+}
+
 variable "tags" {
-  type    = "map"
+  type    = map(string)
   default = {}
 }
 
 variable "volume_tags" {
-  type    = "map"
+  type    = map(string)
   default = {}
 }
 
 variable "vpc_security_group_ids" {
-    type = "list"
+  type = list(string)
 }
+
