@@ -20,7 +20,7 @@ Example usage:
       source                    = "https://github.com/Puppet-Finland/terraform-aws_instance_wrapper.git"
       ami                       = "ami-074e2d6769f445be5"
       hostname                  = "myserver.example.org"
-      default_root_block_device = [{ volume_size = 30, delete_on_termination = false }]
+      default_root_block_device = { volume_size = 30, delete_on_termination = false }
       deployment                = "staging"
       instance_type             = "t2.large"
       key_name                  = "mykey"
