@@ -18,7 +18,7 @@ variable "custom_provisioning_scripts" {
 }
 
 variable "default_root_block_device" {
-  type = map(string)
+  type = list(map(string))
 }
 
 variable "deployment" {
