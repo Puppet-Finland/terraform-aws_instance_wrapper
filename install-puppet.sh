@@ -1,24 +1,39 @@
 #!/bin/sh
 #
-# This is a heavily stripped down version of puppet-puppetmaster/vagrant/prepare.sh
 
 # Exit on any error
 set -e
 
+usage() {
+    echo "Usage: install-puppet.sh [-n <hostname>] [-e <puppet env>] [-s] [-h]"
+    echo
+    echo "Options:"
+    echo "    -n    hostname to set (default: do not set hostname)"
+    echo "    -e    puppet agent environment (default: production)"
+    echo "    -s    enable and start puppet agent (default: no)"
+    echo "    -h    show this help"
+    echo
+    exit 2
+}
+
+# Default settings
+HOST_NAME="false"
+PUPPET_ENV="production"
+START_AGENT="false"
+
+while getopts 'n:e:sh' arg
+do
+  case $arg in
+    n) HOST_NAME=$OPTARG ;;
+    e) PUPPET_ENV=$OPTARG ;;
+    s) START_AGENT="true" ;;
+    h) usage ;;
+  esac
+done
+
 export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
 
 CWD=`pwd`
-
-validate_params() {
-    if [ "$1" = "" ]; then
-      echo "ERROR: hostname not given as the first parameter!"
-      exit 1
-    fi
-    if [ "$2" = "" ]; then
-      echo "ERROR: puppet agent environment not given as the second parameter!"
-      exit 1
-    fi
-}
 
 set_hostname() {
     hostnamectl set-hostname $1
@@ -28,15 +43,18 @@ detect_osfamily() {
     if [ -f /etc/redhat-release ]; then
         OSFAMILY='redhat'
         RELEASE=$(cat /etc/redhat-release)
-	if [ "`echo $RELEASE | grep -E 7\.[0-9]+`" ]; then
+	    if [ "`echo $RELEASE | grep -E 7\.[0-9]+`" ]; then
             REDHAT_VERSION="7"
             REDHAT_RELEASE="el-7"
+	    elif [ "`echo $RELEASE | grep -E 8\.[0-9]+`" ]; then
+            REDHAT_VERSION="8"
+            REDHAT_RELEASE="el-8"
         elif [ "`echo $RELEASE | grep "(Thirty)"`" ]; then
             REDHAT_VERSION="30"
             # Puppetlabs does not have Fedora 30 packages yet
             REDHAT_RELEASE="fedora-29"
         else
-            echo "Unsupported Redhat/Centos/Fedora version. RedHat/CentOS 7 and Fedora 30 are supported."
+            echo "Unsupported Redhat/Centos/Fedora version. RedHat/CentOS 7-8 and Fedora 30 are supported."
             exit 1
         fi
     elif [ "`lsb_release -d | grep -E '(Ubuntu|Debian)'`" ]; then
@@ -67,7 +85,7 @@ setup_puppet() {
         true
     else
         if [ $REDHAT_RELEASE ]; then
-            RELEASE_URL="https://yum.puppetlabs.com/puppet5/puppet5-release-${REDHAT_RELEASE}.noarch.rpm"
+            RELEASE_URL="https://yum.puppetlabs.com/puppet6/puppet6-release-${REDHAT_RELEASE}.noarch.rpm"
             rpm -hiv "${RELEASE_URL}" || (c=$?; echo "Failed to install ${RELEASE_URL}"; (exit $c))
             yum -y install puppet-agent || (c=$?; echo "Failed to install puppet agent"; (exit $c))
             if systemctl list-unit-files --type=service | grep firewalld; then
@@ -77,10 +95,10 @@ setup_puppet() {
             fi
         else
             if [ $UBUNTU_VERSION ]; then
-                APT_URL="https://apt.puppetlabs.com/puppet5-release-${UBUNTU_VERSION}.deb"
+                APT_URL="https://apt.puppetlabs.com/puppet6-release-${UBUNTU_VERSION}.deb"
             fi
             if [ $DEBIAN_VERSION ]; then
-                APT_URL="https://apt.puppetlabs.com/puppet5-release-${DEBIAN_VERSION}.deb"
+                APT_URL="https://apt.puppetlabs.com/puppet6-release-${DEBIAN_VERSION}.deb"
             fi
             # https://serverfault.com/questions/500764/dpkg-reconfigure-unable-to-re-open-stdin-no-file-or-directory
             export DEBIAN_FRONTEND=noninteractive
@@ -127,10 +145,13 @@ run_puppet_agent() {
     systemctl start puppet
 }
 
-validate_params $1 $2
-set_hostname $1
+if [ "${HOST_NAME}" != "false" ]; then
+    set_hostname $HOST_NAME
+fi
 detect_osfamily
 install_dependencies
 setup_puppet
-set_puppet_agent_environment $2
-run_puppet_agent
+set_puppet_agent_environment $PUPPET_ENV
+if [ "${START_AGENT}" = "true" ]; then
+    run_puppet_agent
+fi
