@@ -23,6 +23,7 @@ resource "aws_instance" "ec2_instance" {
       volume_type           = lookup(root_block_device.value, "volume_type", null)
     }
   }
+  source_dest_check      = var.source_dest_check
   subnet_id              = var.subnet_id
   tags                   = local.tags
   volume_tags            = var.volume_tags

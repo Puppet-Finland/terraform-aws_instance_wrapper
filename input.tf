@@ -82,6 +82,11 @@ variable "region" {
   type = string
 }
 
+variable "source_dest_check" {
+  type    = bool
+  default = true
+}
+
 variable "subnet_id" {
   type = string
 }
