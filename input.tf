@@ -12,6 +12,18 @@ variable "associate_public_ip_address" {
   default = true
 }
 
+# Create Cloudwatch alarm to restart this instance if the instance check fails.
+variable "restart_on_instance_failure" {
+  type    = bool
+  default = false
+}
+
+# Create Cloudwatch alarm to restart this instance if the system check fails.
+variable "restart_on_system_failure" {
+  type    = bool
+  default = false
+}
+
 variable "custom_provisioning_scripts" {
   type    = list(string)
   default = []
@@ -23,6 +35,20 @@ variable "default_root_block_device" {
 
 variable "deployment" {
   type = string
+}
+
+# This parameter expects a map in this format:
+#
+# { ephemeral0 = "/dev/sdb", ephemeral1 = "/dev/sdc" }
+#
+# Note that this triggers a useless rebuild of the instance if you don't have
+# any ephemeral (instance store) volumes attached to it. If you do have such
+# volumes attached you need to remove those devices using the AWS CLI or adding
+# of Cloudwatch alarms will fail (for whatever reason).
+#
+variable "disabled_ephemeral_block_devices" {
+  type = map(string)
+  default = {}
 }
 
 variable "ebs_optimized" {
