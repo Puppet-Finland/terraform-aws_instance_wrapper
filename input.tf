@@ -74,6 +74,11 @@ variable "puppet_environment" {
   default = "false"
 }
 
+variable "puppet_version" {
+  type = number
+  default = 6
+}
+
 variable "puppetmaster_ip" {
   type = string
 }
