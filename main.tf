@@ -29,6 +29,20 @@ resource "aws_instance" "ec2_instance" {
   volume_tags            = var.volume_tags
   vpc_security_group_ids = var.vpc_security_group_ids
 
+  instance_initiated_shutdown_behavior = "stop"
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdb"
+    no_device    = "true"
+    virtual_name = "ephemeral0"
+  }
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdc"
+    no_device    = "true"
+    virtual_name = "ephemeral1"
+  }
+
   lifecycle {
     ignore_changes = [
       associate_public_ip_address,
@@ -75,3 +89,21 @@ resource "aws_instance" "ec2_instance" {
   }
 }
 
+# Optional restarts if instance or system status checks failed. This is done
+# via CloudWatch alarms.
+resource "aws_cloudwatch_metric_alarm" "system" {
+  #count                     = var.restart_on_system_failure == true ? 1 : 0
+  alarm_name                = "${var.hostname}_system_check_fail"
+  alarm_description         = "System check has failed"
+  alarm_actions             = ["arn:aws:automate:${var.region}:ec2:recover"]
+  metric_name               = "StatusCheckFailed_System"
+  namespace                 = "AWS/EC2"
+  dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
+  statistic                 = "Maximum"
+  period                    = "300"
+  evaluation_periods        = "2"
+  datapoints_to_alarm       = "2"
+  threshold                 = "1"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  tags                      = { "Name": "${var.hostname}_system_check_fail" }
+}

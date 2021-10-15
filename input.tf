@@ -12,6 +12,16 @@ variable "associate_public_ip_address" {
   default = true
 }
 
+variable "restart_on_instance_failure" {
+  type    = bool
+  default = false
+}
+
+variable "restart_on_system_failure" {
+  type    = bool
+  default = false
+}
+
 variable "custom_provisioning_scripts" {
   type    = list(string)
   default = []
