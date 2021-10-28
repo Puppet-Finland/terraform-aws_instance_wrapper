@@ -35,6 +35,21 @@ variable "deployment" {
   type = string
 }
 
+# This parameter expects a map in this format:
+#
+# { ephemeral0 = "/dev/sdb", ephemeral1 = "/dev/sdc" }
+#
+# Note that this triggers a useless rebuild of the instance if you have
+# ephemeral devices attached to it, unless you first remove those devices using
+# the AWS CLI. You may want to do this is you're interested in making automatic
+# EC2 instance recovery work: it does not work (for whatever reason) if
+# instance store (ephemeral) volumes are attached.
+#
+variable "disabled_ephemeral_block_devices" {
+  type = map(string)
+  default = {}
+}
+
 variable "ebs_optimized" {
   type    = bool
   default = true

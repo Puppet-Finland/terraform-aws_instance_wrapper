@@ -31,16 +31,13 @@ resource "aws_instance" "ec2_instance" {
 
   instance_initiated_shutdown_behavior = "stop"
 
-  ephemeral_block_device {
-    device_name  = "/dev/sdb"
-    no_device    = "true"
-    virtual_name = "ephemeral0"
-  }
-
-  ephemeral_block_device {
-    device_name  = "/dev/sdc"
-    no_device    = "true"
-    virtual_name = "ephemeral1"
+  dynamic "disable_ephemeral_block_devices" {
+    for_each = var.disabled_ephemeral_block_devices
+      ephemeral_block_device {
+        device_name  = each.value
+        no_device    = "true"
+        virtual_name = each.key
+      }
   }
 
   lifecycle {
