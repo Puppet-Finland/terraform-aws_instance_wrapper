@@ -34,9 +34,9 @@ resource "aws_instance" "ec2_instance" {
   dynamic "ephemeral_block_device" {
     for_each = var.disabled_ephemeral_block_devices
       content {
-        device_name  = each.value
+        device_name  = ephemeral_block_device.value
         no_device    = "true"
-        virtual_name = each.key
+        virtual_name = ephemeral_block_device.key
       }
   }
 
