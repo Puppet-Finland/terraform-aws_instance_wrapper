@@ -31,7 +31,7 @@ resource "aws_instance" "ec2_instance" {
 
   instance_initiated_shutdown_behavior = "stop"
 
-  dynamic "disable_ephemeral_block_devices" {
+  dynamic "setting" {
     for_each = var.disabled_ephemeral_block_devices
       ephemeral_block_device {
         device_name  = each.value
