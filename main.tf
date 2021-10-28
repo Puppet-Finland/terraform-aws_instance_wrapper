@@ -89,7 +89,7 @@ resource "aws_instance" "ec2_instance" {
 # Optional restarts if instance or system status checks failed. This is done
 # via CloudWatch alarms.
 resource "aws_cloudwatch_metric_alarm" "system" {
-  #count                     = var.restart_on_system_failure == true ? 1 : 0
+  count                     = var.restart_on_system_failure == true ? 1 : 0
   alarm_name                = "${var.hostname}_system_check_fail"
   alarm_description         = "System check has failed"
   alarm_actions             = ["arn:aws:automate:${var.region}:ec2:recover"]
@@ -100,6 +100,23 @@ resource "aws_cloudwatch_metric_alarm" "system" {
   period                    = "300"
   evaluation_periods        = "2"
   datapoints_to_alarm       = "2"
+  threshold                 = "1"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  tags                      = { "Name": "${var.hostname}_system_check_fail" }
+}
+
+resource "aws_cloudwatch_metric_alarm" "instance" {
+  count                     = var.restart_on_instance_failure == true ? 1 : 0
+  alarm_name                = "${var.hostname}_instance_check_fail"
+  alarm_description         = "Instance check has failed"
+  alarm_actions             = ["arn:aws:automate:${var.region}:ec2:reboot"]
+  metric_name               = "StatusCheckFailed_Instance"
+  namespace                 = "AWS/EC2"
+  dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
+  statistic                 = "Maximum"
+  period                    = "300"
+  evaluation_periods        = "3"
+  datapoints_to_alarm       = "3"
   threshold                 = "1"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   tags                      = { "Name": "${var.hostname}_system_check_fail" }
