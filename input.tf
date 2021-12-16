@@ -24,6 +24,12 @@ variable "restart_on_system_failure" {
   default = false
 }
 
+# Notify an SNS topic unless set to "none"
+variable "sns_topic_arn" {
+  type = string
+  default = "none"
+}
+
 variable "custom_provisioning_scripts" {
   type    = list(string)
   default = []

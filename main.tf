@@ -92,7 +92,8 @@ resource "aws_cloudwatch_metric_alarm" "system" {
   count                     = var.restart_on_system_failure == true ? 1 : 0
   alarm_name                = "${var.hostname}_system_check_fail"
   alarm_description         = "System check has failed"
-  alarm_actions             = ["arn:aws:automate:${var.region}:ec2:recover"]
+  alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:recover",
+                                       local.sns_topic_arn])
   metric_name               = "StatusCheckFailed_System"
   namespace                 = "AWS/EC2"
   dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
@@ -109,7 +110,8 @@ resource "aws_cloudwatch_metric_alarm" "instance" {
   count                     = var.restart_on_instance_failure == true ? 1 : 0
   alarm_name                = "${var.hostname}_instance_check_fail"
   alarm_description         = "Instance check has failed"
-  alarm_actions             = ["arn:aws:automate:${var.region}:ec2:reboot"]
+  alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:reboot",
+                                       local.sns_topic_arn])
   metric_name               = "StatusCheckFailed_Instance"
   namespace                 = "AWS/EC2"
   dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
