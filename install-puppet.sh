@@ -23,7 +23,7 @@ PUPPET_ENV="production"
 PUPPET_VERSION="6"
 START_AGENT="false"
 
-while getopts 'n:e:sh' arg
+while getopts 'n:e:p:sh' arg
 do
   case $arg in
     n) HOST_NAME=$OPTARG ;;
