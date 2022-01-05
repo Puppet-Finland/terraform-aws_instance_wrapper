@@ -54,17 +54,9 @@ resource "aws_instance" "ec2_instance" {
     host        = var.provision_using_private_ip == "true" ? aws_instance.ec2_instance[0].private_ip : aws_instance.ec2_instance[0].public_ip
   }
 
-  provisioner "remote-exec" {
-    inline = ["echo ${var.puppetmaster_ip} puppet|sudo tee -a /etc/hosts"]
-  }
-
   provisioner "file" {
     source      = "${path.module}/install-puppet.sh"
     destination = "/tmp/install-puppet.sh"
-  }
-
-  provisioner "remote-exec" {
-    inline = ["sudo mkdir -p /etc/puppetlabs/facter/facts.d"]
   }
 
   provisioner "file" {
@@ -73,12 +65,11 @@ resource "aws_instance" "ec2_instance" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "sudo mv /tmp/deployment.yaml /etc/puppetlabs/facter/facts.d/",
-      "sudo chown -R root:root /etc/puppetlabs/facter",
-      "chmod +x /tmp/install-puppet.sh",
-      "sudo /tmp/install-puppet.sh -n ${var.hostname} -e ${local.puppet_env} -p ${var.puppet_version} -s",
-    ]
+    inline = concat(["echo Provisioning"], [for command in local.provisioner_commands: command if var.install_puppet_agent])
+  }
+
+  provisioner "remote-exec" {
+    inline = ["rm -f /tmp/install-puppet.sh /tmp/deployment.yaml"]
   }
 
   provisioner "remote-exec" {

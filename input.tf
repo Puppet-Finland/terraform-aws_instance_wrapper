@@ -7,6 +7,12 @@ variable "amount" {
   default = 1
 }
 
+# Whether to install Puppet Agent or not.
+variable "install_puppet_agent" {
+  type    = bool
+  default = true
+}
+
 variable "associate_public_ip_address" {
   type    = bool
   default = true
@@ -41,6 +47,7 @@ variable "default_root_block_device" {
 
 variable "deployment" {
   type = string
+  default = "production"
 }
 
 # This parameter expects a map in this format:
@@ -113,6 +120,7 @@ variable "puppet_version" {
 
 variable "puppetmaster_ip" {
   type = string
+  default = ""
 }
 
 variable "region" {
