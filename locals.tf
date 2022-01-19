@@ -3,11 +3,12 @@ locals {
   deployment_tag       = { "deployment" = var.deployment }
   hostname_tag         = { "Name"       = var.hostname   }
 
+  # Command to run to set up the deployment fact for Puppet
+  deployment_fact_commands  = ["sudo mkdir -p /etc/facter/facts.d",
+                               "sudo mv /tmp/deployment.yaml /etc/facter/facts.d/",
+                               "sudo chown -R root:root /etc/facter"]
   # Command to run if install_puppet_agent == true
-  provisioner_commands = ["sudo mkdir -p /etc/puppetlabs/facter/facts.d",
-                          "sudo mv /tmp/deployment.yaml /etc/puppetlabs/facter/facts.d/",
-                          "sudo chown -R root:root /etc/puppetlabs/facter",
-                          "chmod +x /tmp/install-puppet.sh",
+  puppet_agent_commands = ["chmod +x /tmp/install-puppet.sh",
                           "sudo /tmp/install-puppet.sh -n ${var.hostname} -e ${local.puppet_env} -p ${var.puppet_version} -s"]
   puppet_env           = var.puppet_environment == "false" ? var.deployment : var.puppet_environment
   set_hostname_command = "sudo hostnamectl set-hostname ${var.hostname}"

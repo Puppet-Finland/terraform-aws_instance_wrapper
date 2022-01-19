@@ -65,7 +65,11 @@ resource "aws_instance" "ec2_instance" {
   }
 
   provisioner "remote-exec" {
-    inline = concat(["echo Provisioning"], [local.set_hostname_command], [local.etc_hosts_command], [for command in local.provisioner_commands: command if var.install_puppet_agent])
+    inline = concat(["echo Provisioning"], [for command in local.deployment_fact_commands: command if var.deployment != ""])
+  }
+
+  provisioner "remote-exec" {
+    inline = concat(["echo Provisioning"], [local.set_hostname_command], [local.etc_hosts_command], [for command in local.puppet_agent_commands: command if var.install_puppet_agent])
   }
 
   provisioner "remote-exec" {

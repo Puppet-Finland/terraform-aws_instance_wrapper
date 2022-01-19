@@ -46,8 +46,8 @@ variable "default_root_block_device" {
 }
 
 variable "deployment" {
-  type = string
-  default = "production"
+  type    = string
+  default = ""
 }
 
 # This parameter expects a map in this format:
