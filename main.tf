@@ -52,7 +52,7 @@ resource "aws_instance" "ec2_instance" {
     type        = "ssh"
     user        = var.provisioning_user
     private_key = file(var.provisioning_ssh_key)
-    host        = var.provision_using_private_ip == "true" ? aws_instance.ec2_instance[0].private_ip : aws_instance.ec2_instance[0].public_ip
+    host        = var.provision_using_private_ip == true ? self.private_ip : self.public_ip
   }
 
   provisioner "file" {

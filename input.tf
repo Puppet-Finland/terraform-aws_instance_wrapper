@@ -109,7 +109,7 @@ variable "provisioning_user" {
 
 variable "provision_using_private_ip" {
   type    = bool
-  default = true
+  default = false
 }
 
 # By default use "deployment" as the Puppet environment name
