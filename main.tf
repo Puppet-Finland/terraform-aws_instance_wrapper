@@ -4,6 +4,7 @@ resource "aws_instance" "ec2_instance" {
   count                       = var.amount
   disable_api_termination     = var.disable_api_termination
   ebs_optimized               = var.ebs_optimized
+  iam_instance_profile        = var.iam_instance_profile
   instance_type               = var.instance_type
   key_name                    = var.key_name
   private_ip                  = var.private_ip
