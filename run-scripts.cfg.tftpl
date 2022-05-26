@@ -1,9 +1,9 @@
 #cloud-config
 runcmd:
   - [ "/var/cache/set-hostname.sh", "${hostname}" ]
+  - [ "/var/cache/add-deployment-fact.sh", "${deployment}" ]
 %{ if install_puppet_agent ~}
   - [ "/var/cache/add-puppetmaster-to-etc-hosts.sh", "${puppetmaster_ip}" ]
-  - [ "/var/cache/add-deployment-fact.sh", "${deployment}" ]
   - [ "/var/cache/install-puppet.sh", "-n", "${hostname}", "-e", "${puppet_env}", "-p", "${puppet_version}", "-s"]
 %{endif ~}
   - [ "rm", "-f", "/var/cache/set-hostname.sh", "/var/cache/add-puppetmaster-to-etc-hosts.sh", "/var/cache/add-deployment-fact.sh", "/var/cache/install-puppet.sh" ]
