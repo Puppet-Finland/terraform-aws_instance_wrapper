@@ -71,7 +71,7 @@ data "template_file" "run_scripts" {
 }
 
 data "cloudinit_config" "provision" {
-  gzip          = true
+  gzip          = false
   base64_encode = true
 
   # The provisioning scripts are embedded using heredoc into a static
