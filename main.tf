@@ -7,7 +7,7 @@ resource "aws_instance" "ec2_instance" {
   iam_instance_profile        = var.iam_instance_profile
   instance_type               = var.instance_type
   key_name                    = var.key_name
-  private_ip                  = var.private_ip
+  private_ip                  = var.private_ip == "" ? null : var.private_ip
   dynamic "root_block_device" {
     for_each = var.default_root_block_device
     content {
