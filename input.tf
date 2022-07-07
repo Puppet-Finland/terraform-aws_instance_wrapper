@@ -36,11 +36,6 @@ variable "sns_topic_arn" {
   default = "none"
 }
 
-variable "custom_provisioning_scripts" {
-  type    = list(string)
-  default = []
-}
-
 variable "default_root_block_device" {
   type = list(map(string))
 }
@@ -96,20 +91,6 @@ variable "key_name" {
 variable "private_ip" {
   type    = string
   default = ""
-}
-
-variable "provisioning_ssh_key" {
-  type = string
-}
-
-variable "provisioning_user" {
-  type = string
-  default = "ubuntu"
-}
-
-variable "provision_using_private_ip" {
-  type    = bool
-  default = true
 }
 
 # By default use "deployment" as the Puppet environment name
