@@ -59,6 +59,14 @@ variable "disabled_ephemeral_block_devices" {
   default = {}
 }
 
+# This parameter expects a map in this format:
+#
+# { "0" = aws_network_interface.foo.id, "1" = aws_network_interface.bar.id }
+variable "network_interfaces" {
+  type = map(string)
+  default = {}
+}
+
 variable "ebs_optimized" {
   type    = bool
   default = true
@@ -120,6 +128,7 @@ variable "source_dest_check" {
 
 variable "subnet_id" {
   type = string
+  default = null
 }
 
 variable "tags" {
@@ -134,5 +143,6 @@ variable "volume_tags" {
 
 variable "vpc_security_group_ids" {
   type = list(string)
+  default = []
 }
 

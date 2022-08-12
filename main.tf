@@ -1,6 +1,6 @@
 resource "aws_instance" "ec2_instance" {
   ami                         = var.ami
-  associate_public_ip_address = var.associate_public_ip_address
+  associate_public_ip_address = length(var.network_interfaces) > 0 ? null : var.associate_public_ip_address
   count                       = var.amount
   disable_api_termination     = var.disable_api_termination
   ebs_optimized               = var.ebs_optimized
@@ -24,12 +24,12 @@ resource "aws_instance" "ec2_instance" {
       volume_type           = lookup(root_block_device.value, "volume_type", null)
     }
   }
-  source_dest_check      = var.source_dest_check
-  subnet_id              = var.subnet_id
+  source_dest_check      = length(var.network_interfaces) > 0 ? null : var.source_dest_check
+  subnet_id              = length(var.network_interfaces) > 0 ? null : var.subnet_id
   tags                   = local.tags
   user_data              = data.cloudinit_config.provision.rendered
   volume_tags            = var.volume_tags
-  vpc_security_group_ids = var.vpc_security_group_ids
+  vpc_security_group_ids = length(var.network_interfaces) > 0 ? null : var.vpc_security_group_ids
 
   instance_initiated_shutdown_behavior = "stop"
 
@@ -40,6 +40,14 @@ resource "aws_instance" "ec2_instance" {
         no_device    = "true"
         virtual_name = ephemeral_block_device.key
       }
+  }
+
+  dynamic "network_interface" {
+    for_each = var.network_interfaces
+    content {
+      network_interface_id = network_interface.value
+      device_index         = network_interface.key
+    }
   }
 
   lifecycle {
