@@ -18,6 +18,18 @@ variable "associate_public_ip_address" {
   default = true
 }
 
+# Set to true only in the unlikely case when you are converting the implicitly
+# created default network interface into a separate network interface block.
+#
+# According to Terraform documentation true is an invalid value here, but
+# setting it does prevent Terraform from (unnecessarily) replacing the
+# aws_instance resource.
+#
+variable "network_interface_delete_on_termination" {
+  type    = bool
+  default = false
+}
+
 # Create Cloudwatch alarm to restart this instance if the instance check fails.
 variable "restart_on_instance_failure" {
   type    = bool

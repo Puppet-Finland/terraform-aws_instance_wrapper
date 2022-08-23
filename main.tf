@@ -45,8 +45,9 @@ resource "aws_instance" "ec2_instance" {
   dynamic "network_interface" {
     for_each = var.network_interfaces
     content {
-      network_interface_id = network_interface.value
-      device_index         = network_interface.key
+      delete_on_termination = var.network_interface_delete_on_termination
+      network_interface_id  = network_interface.value
+      device_index          = network_interface.key
     }
   }
 
