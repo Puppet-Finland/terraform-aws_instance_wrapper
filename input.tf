@@ -138,7 +138,7 @@ variable "tags" {
 
 variable "volume_tags" {
   type    = map(string)
-  default = {}
+  default = null
 }
 
 variable "vpc_security_group_ids" {
