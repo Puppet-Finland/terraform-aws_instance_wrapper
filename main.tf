@@ -36,11 +36,11 @@ resource "aws_instance" "ec2_instance" {
 
   dynamic "ephemeral_block_device" {
     for_each = var.disabled_ephemeral_block_devices
-      content {
-        device_name  = ephemeral_block_device.value
-        no_device    = "true"
-        virtual_name = ephemeral_block_device.key
-      }
+    content {
+      device_name  = ephemeral_block_device.value
+      no_device    = "true"
+      virtual_name = ephemeral_block_device.key
+    }
   }
 
   dynamic "network_interface" {
@@ -60,23 +60,9 @@ resource "aws_instance" "ec2_instance" {
   }
 }
 
-
 # cloud-init config that installs the provisioning scripts
 data "local_file" "write_scripts" {
   filename = "${path.module}/write-scripts.cfg"
-}
-
-# cloud-init config to run install-puppet.sh
-data "template_file" "run_scripts" {
-  template = file("${path.module}/run-scripts.cfg.tftpl")
-  vars     = {
-               hostname             = var.hostname,
-               deployment           = var.deployment,
-               install_puppet_agent = var.install_puppet_agent,
-               puppet_env           = local.puppet_env,
-               puppet_version       = var.puppet_version,
-               puppetmaster_ip      = var.puppetmaster_ip,
-             }
 }
 
 data "cloudinit_config" "provision" {
@@ -97,46 +83,49 @@ data "cloudinit_config" "provision" {
 
   # Run the provisioning scripts. This is a template so that we can
   # adjust the parameters passed to the scripts.
+
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.run_scripts.rendered
+    content      = templatefile("${path.module}/run-scripts.cfg.tftpl", local.run_scripts)
   }
 }
+
+
 
 # Optional restarts if instance or system status checks failed. This is done
 # via CloudWatch alarms.
 resource "aws_cloudwatch_metric_alarm" "system" {
-  count                     = var.restart_on_system_failure == true ? 1 : 0
-  alarm_name                = "${var.hostname}_system_check_fail"
-  alarm_description         = "System check has failed"
-  alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:recover",
-                                       local.sns_topic_arn])
-  metric_name               = "StatusCheckFailed_System"
-  namespace                 = "AWS/EC2"
-  dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
-  statistic                 = "Maximum"
-  period                    = "300"
-  evaluation_periods        = "2"
-  datapoints_to_alarm       = "2"
-  threshold                 = "1"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  tags                      = { "Name": "${var.hostname}_system_check_fail" }
+  count             = var.restart_on_system_failure == true ? 1 : 0
+  alarm_name        = "${var.hostname}_system_check_fail"
+  alarm_description = "System check has failed"
+  alarm_actions = compact(["arn:aws:automate:${var.region}:ec2:recover",
+  local.sns_topic_arn])
+  metric_name         = "StatusCheckFailed_System"
+  namespace           = "AWS/EC2"
+  dimensions          = { InstanceId : aws_instance.ec2_instance[0].id }
+  statistic           = "Maximum"
+  period              = "300"
+  evaluation_periods  = "2"
+  datapoints_to_alarm = "2"
+  threshold           = "1"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  tags                = { "Name" : "${var.hostname}_system_check_fail" }
 }
 
 resource "aws_cloudwatch_metric_alarm" "instance" {
-  count                     = var.restart_on_instance_failure == true ? 1 : 0
-  alarm_name                = "${var.hostname}_instance_check_fail"
-  alarm_description         = "Instance check has failed"
-  alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:reboot",
-                                       local.sns_topic_arn])
-  metric_name               = "StatusCheckFailed_Instance"
-  namespace                 = "AWS/EC2"
-  dimensions                = { InstanceId: aws_instance.ec2_instance[0].id }
-  statistic                 = "Maximum"
-  period                    = "300"
-  evaluation_periods        = "3"
-  datapoints_to_alarm       = "3"
-  threshold                 = "1"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  tags                      = { "Name": "${var.hostname}_system_check_fail" }
+  count             = var.restart_on_instance_failure == true ? 1 : 0
+  alarm_name        = "${var.hostname}_instance_check_fail"
+  alarm_description = "Instance check has failed"
+  alarm_actions = compact(["arn:aws:automate:${var.region}:ec2:reboot",
+  local.sns_topic_arn])
+  metric_name         = "StatusCheckFailed_Instance"
+  namespace           = "AWS/EC2"
+  dimensions          = { InstanceId : aws_instance.ec2_instance[0].id }
+  statistic           = "Maximum"
+  period              = "300"
+  evaluation_periods  = "3"
+  datapoints_to_alarm = "3"
+  threshold           = "1"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  tags                = { "Name" : "${var.hostname}_system_check_fail" }
 }

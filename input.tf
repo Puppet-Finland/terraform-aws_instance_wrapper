@@ -3,7 +3,7 @@ variable "ami" {
 
 # Setting "amount" to 0 is equivalent to "ensure => absent" in Puppet
 variable "amount" {
-  type = number
+  type    = number
   default = 1
 }
 
@@ -32,7 +32,7 @@ variable "restart_on_system_failure" {
 
 # Notify an SNS topic unless set to "none"
 variable "sns_topic_arn" {
-  type = string
+  type    = string
   default = "none"
 }
 
@@ -55,7 +55,7 @@ variable "deployment" {
 # of Cloudwatch alarms will fail (for whatever reason).
 #
 variable "disabled_ephemeral_block_devices" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
@@ -63,7 +63,7 @@ variable "disabled_ephemeral_block_devices" {
 #
 # { "0" = aws_network_interface.foo.id, "1" = aws_network_interface.bar.id }
 variable "network_interfaces" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
@@ -82,17 +82,17 @@ variable "hostname" {
 }
 
 variable "instance_type" {
-  type = string
+  type    = string
   default = "t2.micro"
 }
 
 variable "iam_instance_profile" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "key_name" {
-  type = string
+  type    = string
   default = "terraform"
 }
 
@@ -103,17 +103,17 @@ variable "private_ip" {
 
 # By default use "deployment" as the Puppet environment name
 variable "puppet_environment" {
-  type = string
+  type    = string
   default = "false"
 }
 
 variable "puppet_version" {
-  type = number
+  type    = number
   default = 6
 }
 
 variable "puppetmaster_ip" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -127,7 +127,7 @@ variable "source_dest_check" {
 }
 
 variable "subnet_id" {
-  type = string
+  type    = string
   default = null
 }
 
@@ -142,7 +142,7 @@ variable "volume_tags" {
 }
 
 variable "vpc_security_group_ids" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
