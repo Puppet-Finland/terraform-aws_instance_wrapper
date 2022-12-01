@@ -66,19 +66,6 @@ data "local_file" "write_scripts" {
   filename = "${path.module}/write-scripts.cfg"
 }
 
-# cloud-init config to run install-puppet.sh
-data "template_file" "run_scripts" {
-  template = file("${path.module}/run-scripts.cfg.tftpl")
-  vars     = {
-               hostname             = var.hostname,
-               deployment           = var.deployment,
-               install_puppet_agent = var.install_puppet_agent,
-               puppet_env           = local.puppet_env,
-               puppet_version       = var.puppet_version,
-               puppetmaster_ip      = var.puppetmaster_ip,
-             }
-}
-
 data "cloudinit_config" "provision" {
   gzip          = false
   base64_encode = true
@@ -99,7 +86,16 @@ data "cloudinit_config" "provision" {
   # adjust the parameters passed to the scripts.
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.run_scripts.rendered
+    content      = templatefile("${path.module}/run-scripts.cfg.tftpl",
+                                {
+                                  hostname             = var.hostname,
+                                  deployment           = var.deployment,
+                                  install_puppet_agent = var.install_puppet_agent,
+                                  puppet_env           = local.puppet_env,
+                                  puppet_version       = var.puppet_version,
+                                  puppetmaster_ip      = var.puppetmaster_ip,
+                                }
+                               )
   }
 }
 
