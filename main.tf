@@ -117,6 +117,7 @@ resource "aws_cloudwatch_metric_alarm" "system" {
   threshold                 = "1"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   tags                      = { "Name": "${var.hostname}_system_check_fail" }
+  depends_on                = [aws_instance.ec2_instance]
 }
 
 resource "aws_cloudwatch_metric_alarm" "instance" {
@@ -135,4 +136,5 @@ resource "aws_cloudwatch_metric_alarm" "instance" {
   threshold                 = "1"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   tags                      = { "Name": "${var.hostname}_system_check_fail" }
+  depends_on                = [aws_instance.ec2_instance]
 }
