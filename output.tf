@@ -13,6 +13,10 @@ output "public_ip" {
   value = aws_instance.ec2_instance.*.public_ip
 }
 
+output "ipv6_addresses" {
+  value = aws_instance.ec2_instance.*.ipv6_addresses
+}
+
 output "private_dns" {
   value = aws_instance.ec2_instance.*.private_dns
 }
