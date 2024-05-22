@@ -146,3 +146,8 @@ variable "vpc_security_group_ids" {
   default = []
 }
 
+variable "repo_package_url" {
+  type = string
+  default = "autodetect"
+  description = "Sets the pkg url for puppetlabs repo to be installed."
+}

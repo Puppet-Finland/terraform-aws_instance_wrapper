@@ -4,6 +4,6 @@ runcmd:
   - [ "/var/cache/add-deployment-fact.sh", "${deployment}" ]
 %{ if install_puppet_agent ~}
   - [ "/var/cache/add-puppetmaster-to-etc-hosts.sh", "${puppetmaster_ip}" ]
-  - [ "/var/cache/install-puppet.sh", "-n", "${hostname}", "-e", "${puppet_env}", "-p", "${puppet_version}", "-s"]
+  - [ "/var/cache/install-puppet.sh", "-n", "${hostname}", "-e", "${puppet_env}", "-p", "${puppet_version}", "-d", "${repo_package_url}", "-s"]
 %{endif ~}
   - [ "rm", "-f", "/var/cache/set-hostname.sh", "/var/cache/add-puppetmaster-to-etc-hosts.sh", "/var/cache/add-deployment-fact.sh", "/var/cache/install-puppet.sh" ]
