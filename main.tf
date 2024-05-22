@@ -95,6 +95,8 @@ data "cloudinit_config" "provision" {
                                   puppet_env           = local.puppet_env,
                                   puppet_version       = var.puppet_version,
                                   puppetmaster_ip      = var.puppetmaster_ip,
+                                  repo_package_url     = var.repo_package_url,
+                                  ipv6_only            = var.ipv6_only,
                                 }
                                )
   }

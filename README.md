@@ -12,6 +12,8 @@ require some explanation:
 * **tags**: extra tags to add to the instance; note that this module sets "Name" = "<hostname>" tag automatically.
 * **install_puppet_agent**: install Puppet agent. Defaults to true.
 * **puppetmaster_ip**: IP address of the Puppet server. Not set by default which is ok if you are not using a Puppet server or if it can be found using the built-in default name ("puppet").
+* **repo_package_url**: manually define the puppetlabs repo package URL. Use when autodetection does not work or official packages are not yet available for your operating system.
+* **ipv6_only**: force use of IPv6 for outbound connections. Currently only affects yum and dnf configuration.
 
 Example usage:
 

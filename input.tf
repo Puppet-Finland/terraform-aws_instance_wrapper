@@ -13,6 +13,12 @@ variable "install_puppet_agent" {
   default = true
 }
 
+# Whether to use/force IPv6 for outbound connections
+variable "ipv6_only" {
+  type    = bool
+  default = false
+}
+
 variable "associate_public_ip_address" {
   type    = bool
   default = true
@@ -146,3 +152,8 @@ variable "vpc_security_group_ids" {
   default = []
 }
 
+variable "repo_package_url" {
+  type = string
+  default = "autodetect"
+  description = "Sets the pkg url for puppetlabs repo to be installed."
+}
