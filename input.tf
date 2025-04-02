@@ -19,6 +19,12 @@ variable "ipv6_only" {
   default = false
 }
 
+# Hosted zone for DNS entries
+variable "hosted_zone_id" {
+  type    = string
+  default = ""
+}
+
 variable "associate_public_ip_address" {
   type    = bool
   default = true
