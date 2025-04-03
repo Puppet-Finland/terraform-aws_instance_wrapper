@@ -14,6 +14,7 @@ require some explanation:
 * **puppetmaster_ip**: IP address of the Puppet server. Not set by default which is ok if you are not using a Puppet server or if it can be found using the built-in default name ("puppet").
 * **repo_package_url**: manually define the puppetlabs repo package URL. Use when autodetection does not work or official packages are not yet available for your operating system.
 * **ipv6_only**: force use of IPv6 for outbound connections. Currently only affects yum and dnf configuration.
+* **hosted_zone_id**: Route53 hosted zone ID where A record ("hostname -> private IP") for this EC2 instance will be added (optional)
 
 Example usage:
 
