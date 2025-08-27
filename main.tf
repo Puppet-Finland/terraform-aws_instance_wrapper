@@ -105,7 +105,7 @@ data "cloudinit_config" "provision" {
 # Optional restarts if instance or system status checks failed. This is done
 # via CloudWatch alarms.
 resource "aws_cloudwatch_metric_alarm" "system" {
-  count                     = var.restart_on_system_failure == true ? 1 : 0
+  count                     = (var.amount != 0 && var.restart_on_system_failure) ? 1 : 0
   alarm_name                = "${var.hostname}_system_check_fail"
   alarm_description         = "System check has failed"
   alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:recover",
@@ -123,7 +123,7 @@ resource "aws_cloudwatch_metric_alarm" "system" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "instance" {
-  count                     = var.restart_on_instance_failure == true ? 1 : 0
+  count                     = (var.amount != 0 && var.restart_on_system_failure) ? 1 : 0
   alarm_name                = "${var.hostname}_instance_check_fail"
   alarm_description         = "Instance check has failed"
   alarm_actions             = compact(["arn:aws:automate:${var.region}:ec2:reboot",
