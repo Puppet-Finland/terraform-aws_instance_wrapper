@@ -28,7 +28,7 @@ resource "aws_instance" "ec2_instance" {
   source_dest_check      = length(var.network_interfaces) > 0 ? null : var.source_dest_check
   subnet_id              = length(var.network_interfaces) > 0 ? null : var.subnet_id
   tags                   = local.tags
-  user_data              = data.cloudinit_config.provision.rendered
+  user_data_base64       = data.cloudinit_config.provision.rendered
   volume_tags            = var.volume_tags
   vpc_security_group_ids = length(var.network_interfaces) > 0 ? null : var.vpc_security_group_ids
 
