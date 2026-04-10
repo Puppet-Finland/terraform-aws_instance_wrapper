@@ -57,6 +57,7 @@ resource "aws_instance" "ec2_instance" {
       associate_public_ip_address,
       ebs_optimized,
       user_data,
+      user_data_base64,
     ]
   }
 }
